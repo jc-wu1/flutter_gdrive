@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gdrive/src/services/google_services.dart';
@@ -44,10 +46,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             TextButton(
               onPressed: () async {
-                final file =
-                    await FilePicker.platform.pickFiles(type: FileType.image);
-                // file.files.first.
-                await _gDriveService.upload(file!.files.first);
+                FilePickerResult? res = await FilePicker.platform.pickFiles();
+                if (res != null) {
+                  final file = File(res.files.single.path);
+                  await _gDriveService.upload(file);
+                }
+                // final file =
+                //     await FilePicker.platform.pickFiles(type: FileType.image);
+                // // file.files.first.
+                // await _gDriveService.upload(file!.files.first);
               },
               child: const Text('Upload'),
             ),
